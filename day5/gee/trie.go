@@ -12,41 +12,8 @@ type node struct {
 	isWild   bool    //是否精确匹配
 }
 
-// 第一个匹配成功的节点，用于插入
-func (n *node) matchChild(part string) *node {
-	for _, child := range n.children {
-		if child.part == part || child.isWild {
-			return child
-		}
-	}
-	return nil
-}
-
-// 所有匹配成功的节点，用于查找
-func (n *node) matchChildren(part string) []*node {
-	//  节点动态数组
-	nodes := make([]*node, 0)
-	for _, child := range n.children {
-		if child.part == part || child.isWild {
-			nodes = append(nodes, child)
-		}
-	}
-	return nodes
-}
-
-// String
 func (n *node) String() string {
 	return fmt.Sprintf("node{pattern=%s,part=%s,isWild=%t}", n.pattern, n.part, n.isWild)
-}
-
-// travel
-func (n *node) travel(list *([]*node)) {
-	if n.pattern != "" {
-		*list = append(*list, n)
-	}
-	for _, child := range n.children {
-		child.travel(list)
-	}
 }
 
 // insert
@@ -83,4 +50,36 @@ func (n *node) search(parts []string, height int) *node {
 	}
 
 	return nil
+}
+
+// 第一个匹配成功的节点，用于插入
+func (n *node) matchChild(part string) *node {
+	for _, child := range n.children {
+		if child.part == part || child.isWild {
+			return child
+		}
+	}
+	return nil
+}
+
+// 所有匹配成功的节点，用于查找
+func (n *node) matchChildren(part string) []*node {
+	//  节点动态数组
+	nodes := make([]*node, 0)
+	for _, child := range n.children {
+		if child.part == part || child.isWild {
+			nodes = append(nodes, child)
+		}
+	}
+	return nodes
+}
+
+// travel
+func (n *node) travel(list *([]*node)) {
+	if n.pattern != "" {
+		*list = append(*list, n)
+	}
+	for _, child := range n.children {
+		child.travel(list)
+	}
 }
