@@ -123,3 +123,10 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	c.engine = engine
 	engine.router.handle(c)
 }
+
+// Default use Logger()&Recovery middlewares
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
+	return engine
+}
